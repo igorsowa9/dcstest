@@ -1,7 +1,7 @@
 import socket
 import sys
 import struct
-from RPI2.tofloat import tofloat
+from tofloat import tofloat
 import time
 from pprint import pprint as pp
 

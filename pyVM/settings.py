@@ -14,4 +14,4 @@ Port_send = 12345
 Port_receive = 12345
 
 NumData = 2
-settings_fromRTDS = [['P5max', 28, 'ABCN', 4], ['P5min', 29, 'ABCN', 4]]
+settings_fromRTDS = [['V1', 1], ['V2', 2]]
