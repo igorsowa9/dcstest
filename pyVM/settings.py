@@ -6,4 +6,13 @@ Port_send = 12345
 Port_receive = 12345
 
 NumData = 2
-settings_fromRTDS = [['V1', 1], ['V2', 2]]
+settings_fromRTDS = ['V1', 'V2']
+
+IP_broker = ['localhost', # broker between VM and DCS1
+             'localhost', # between VM and DSO
+             'localhost', # between DSO and DCS2
+             'localhost'] # between DSO and BRGW
+
+dcssim = True
+
+period = 15 # every period process starts from data download
