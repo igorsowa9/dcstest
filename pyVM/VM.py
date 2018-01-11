@@ -44,7 +44,8 @@ def runVM():
 
     ### receives SIGN from DCS1 via MQTT topic
     vm.loop_start()
-    vm.subscribe([("VM/VM/DCS/V1",0), ("VM/VM/DCS/V2",0)])
+    vm.subscribe([("VM/VM/DCS/V1",0),
+                  ("VM/VM/DCS/V2",0)])
 
     if dcssim==True: # test certificates from DCS agent
         testdcs = mqttcli.Client()
