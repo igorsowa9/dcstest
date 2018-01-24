@@ -1,7 +1,7 @@
 import platform, sys
 
 IP_send = '134.130.169.96' # RTDS
-IP_receive = '134.130.169.12' # VM/RPI
+IP_receive = '134.130.169.12' # VM
 Port_send = 12345
 Port_receive = 12345
 
@@ -14,5 +14,7 @@ IP_broker = ['localhost', # broker between VM and DCS1
              'localhost'] # between DSO and BRGW
 
 dcssim = True
+
+DSO_control = True
 
 period = 15 # every period process starts from data download

@@ -66,6 +66,8 @@ def runVM():
                    ("LTE/DSO/VM/V2/sign", msgs_from_dcs[1][1]),
                    ("LTE/DSO/VM/V2/ts", ts)]
 
+    # HERE THE ATTACK, for example...
+
     vm.reinitialise()
     vm.connect(IP_broker[1])
     publish.multiple(msgs_to_dso, hostname=IP_broker[1])

@@ -6,7 +6,11 @@ import paho.mqtt.publish as publish
 import time
 
 from receive import receive
-from settings import settings_fromRTDS, NumData, IP_send, IP_receive, Port_send, Port_receive, IP_broker, dcssim
+from settings import settings_fromRTDS, NumData, IP_send, IP_receive, Port_send, Port_receive, IP_broker, dcssim, DSO_control
+from pypower.api import ppoption, runpf, printpf, runopf
+from runopf_no_printpf import runopf as runopf2
+from case33bw_dcs import case33bw_dcs
+from send import send
 
 msgs_from_vm = {}
 
@@ -27,7 +31,35 @@ def on_message_countermeasure(client, userdata, message):
 
 
 def runDSO():
-    pass
+
+    if DSO_control==True:
+        Pload10 = 4.265
+        Qload10 = 2.132
+        V10pu = 0.8754
+
+        ppc = case33bw_dcs()
+        ppc["bus"][9][2] = Pload10
+        ppc["bus"][9][3] = Qload10
+
+        r = runopf2(ppc)
+
+        print(r["gen"][:, 0:3])
+
+        Pset5 = round(r["gen"][1, 1], 4)
+        Qset5 = round(r["gen"][1, 2], 4)
+        Pset7 = round(r["gen"][2, 1], 4)
+        Qset7 = round(r["gen"][2, 2], 4)
+        Pset9 = round(r["gen"][3, 1], 4)
+        Qset9 = round(r["gen"][3, 2], 4)
+        Pset8fl = round(r["gen"][4, 1], 4)
+        Qset8fl = round(r["gen"][4, 2], 4)
+
+        data_to_RTDS = [Pset5, Qset5, Pset7, Qset7, Pset9, Qset9, Pset8fl, Qset8fl]
+        send(data_to_RTDS, IP_send, Port_send)
+        # print("RPI2: Successfully sent! Control values sent to RTDS: ", data_to_RTDS)
+
+        sys.exit()
+
 
     ### receive signature and data from VM
     dso = mqttcli.Client()
@@ -80,6 +112,18 @@ def runDSO():
     dso.loop_stop()
 
     # DSO sends the block traffic command if necessary - via on_message_countermeasure()
+    if DSO_control==True:
+
+        Pload10 = 4.265*2
+        Qload10 = 2.132*2
+        V10pu = 0.8754
+
+        ppc = case33bw_dcs()
+        ppc["bus"][9][2] = Pload10
+        ppc["bus"][9][3] = Qload10
+
+
+        r = runpf(ppc)
 
 
 runDSO()
