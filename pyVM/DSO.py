@@ -11,6 +11,7 @@ from pypower.api import ppoption, runpf, printpf, runopf
 from runopf_no_printpf import runopf as runopf2
 from case33bw_dcs import case33bw_dcs
 from send import send
+import bitstring
 
 msgs_from_vm = {}
 
@@ -33,6 +34,10 @@ def on_message_countermeasure(client, userdata, message):
 def runDSO():
 
     if DSO_control==True:
+
+        f1 = bitstring.BitArray(float=4.265, length=32)
+        print(f1.hex)
+
         Pload10 = 4.265
         Qload10 = 2.132
         V10pu = 0.8754
@@ -46,17 +51,21 @@ def runDSO():
         print(r["gen"][:, 0:3])
 
         Pset5 = round(r["gen"][1, 1], 4)
+        if Pset5 == 0: Pset5 = 0.0001
         Qset5 = round(r["gen"][1, 2], 4)
         Pset7 = round(r["gen"][2, 1], 4)
+        if Pset7 == 0: Pset7 = 0.0001
         Qset7 = round(r["gen"][2, 2], 4)
         Pset9 = round(r["gen"][3, 1], 4)
+        if Pset9 == 0: Pset9 = 0.0001
         Qset9 = round(r["gen"][3, 2], 4)
+
         Pset8fl = round(r["gen"][4, 1], 4)
         Qset8fl = round(r["gen"][4, 2], 4)
 
         data_to_RTDS = [Pset5, Qset5, Pset7, Qset7, Pset9, Qset9, Pset8fl, Qset8fl]
+        print(data_to_RTDS)
         send(data_to_RTDS, IP_send, Port_send)
-        # print("RPI2: Successfully sent! Control values sent to RTDS: ", data_to_RTDS)
 
         sys.exit()
 
@@ -114,16 +123,28 @@ def runDSO():
     # DSO sends the block traffic command if necessary - via on_message_countermeasure()
     if DSO_control==True:
 
-        Pload10 = 4.265*2
-        Qload10 = 2.132*2
+        Pload10 = 4.265 # data received from measurements, also might be compromised
+        Qload10 = 2.132
         V10pu = 0.8754
 
-        ppc = case33bw_dcs()
-        ppc["bus"][9][2] = Pload10
+        ppc = case33bw_dcs() # static data of topology and rest of the loads etc.
+
+        ppc["bus"][9][2] = Pload10 # update of the ppc according to measurements
         ppc["bus"][9][3] = Qload10
 
+        r = runopf2(ppc) # opf according to new states
 
-        r = runpf(ppc)
+        Pset5 = round(r["gen"][1, 1], 4) # setting new control vector for new opf
+        Qset5 = round(r["gen"][1, 2], 4)
+        Pset7 = round(r["gen"][2, 1], 4)
+        Qset7 = round(r["gen"][2, 2], 4)
+        Pset9 = round(r["gen"][3, 1], 4)
+        Qset9 = round(r["gen"][3, 2], 4)
+        Pset8fl = round(r["gen"][4, 1], 4)
+        Qset8fl = round(r["gen"][4, 2], 4)
+
+        data_to_RTDS = [Pset5, Qset5, Pset7, Qset7, Pset9, Qset9, Pset8fl, Qset8fl]
+        send(data_to_RTDS, IP_send, Port_send)
 
 
 runDSO()
