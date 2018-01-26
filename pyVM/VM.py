@@ -19,7 +19,7 @@ def on_message(client, userdata, message):
 
 def runVM():
 
-    ldata = np.array([0.95, 0.23]) # offline TEST
+    ldata = np.array([1.95, 1.23, 1.22, 2.66, 2.34, 2.83]) # offline TEST
     #ldata = receive(IP_receive, Port_receive, NumData)
 
     print("Values received from RTDS (or fake ones): ", ldata)
@@ -29,8 +29,8 @@ def runVM():
         sys.exit()
 
     ### makes HASH1 from DATA
-    h1 = hashlib.sha256(ldata[0]).hexdigest()
-    h2 = hashlib.sha256(ldata[1]).hexdigest()
+    h1 = hashlib.sha256(ldata[:3]).hexdigest() # V1, P,Q,V
+    h2 = hashlib.sha256(ldata[3:]).hexdigest() # V2, P,Q,V
     hash1 = np.array([h1,h2])
 
     ### sends HASH1 to DCS1 via MQTT topic
@@ -62,9 +62,11 @@ def runVM():
     msgs_to_dso = [("LTE/DSO/VM/V1/data", ldata[0]),            # data value
                    ("LTE/DSO/VM/V1/sign", msgs_from_dcs[0][1]), # signature
                    ("LTE/DSO/VM/V1/ts", ts),                    # timestanp
-                   ("LTE/DSO/VM/V2/data", ldata[1]),
+                   ("LTE/DSO/VM/V2/data", ldata[3]),
                    ("LTE/DSO/VM/V2/sign", msgs_from_dcs[1][1]),
                    ("LTE/DSO/VM/V2/ts", ts)]
+
+    print(msgs_to_dso)
 
     # HERE THE ATTACK, for example...
 

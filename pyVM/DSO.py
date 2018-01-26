@@ -33,7 +33,7 @@ def on_message_countermeasure(client, userdata, message):
 
 def runDSO():
 
-    if DSO_control==True:
+    if False:
 
         f1 = bitstring.BitArray(float=4.265, length=32)
         print(f1.hex)
@@ -123,8 +123,10 @@ def runDSO():
     # DSO sends the block traffic command if necessary - via on_message_countermeasure()
     if DSO_control==True:
 
-        Pload10 = 4.265 # data received from measurements, also might be compromised
-        Qload10 = 2.132
+        Pload10 = data[0] # data received from measurements, also might be compromised
+        Qload10 = data[1]
+        print(Pload10, Qload10)
+        sys.exit()
         V10pu = 0.8754
 
         ppc = case33bw_dcs() # static data of topology and rest of the loads etc.
@@ -134,12 +136,16 @@ def runDSO():
 
         r = runopf2(ppc) # opf according to new states
 
-        Pset5 = round(r["gen"][1, 1], 4) # setting new control vector for new opf
+        Pset5 = round(r["gen"][1, 1], 4)
+        if Pset5 == 0: Pset5 = 0.0001
         Qset5 = round(r["gen"][1, 2], 4)
         Pset7 = round(r["gen"][2, 1], 4)
+        if Pset7 == 0: Pset7 = 0.0001
         Qset7 = round(r["gen"][2, 2], 4)
         Pset9 = round(r["gen"][3, 1], 4)
+        if Pset9 == 0: Pset9 = 0.0001
         Qset9 = round(r["gen"][3, 2], 4)
+
         Pset8fl = round(r["gen"][4, 1], 4)
         Qset8fl = round(r["gen"][4, 2], 4)
 
