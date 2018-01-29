@@ -8,13 +8,12 @@ import bitstring
 import struct
 
 from receive import receive
-from settings import settings_fromRTDS, NumData, IP_send, IP_receive, Port_send, Port_receive, IP_broker, dcssim
+from settings import settings_fromRTDS, NumData, IP_send, IP_receive, Port_send, Port_receive, IP_broker, dcssim, wait_dcs
 
 msgs_from_dcs = []
 
-
 def on_message(client, userdata, message):
-    print("Following message received: ", str(message.payload.decode("utf-8")), ": about ", "V? = ", message.topic[-2:])
+    #print("Following message received: ", str(message.payload.decode("utf-8")), ": about ", "V? = ", message.topic[-2:])
     tup = [message.topic[-2:], str(message.payload.decode("utf-8"))]
     msgs_from_dcs.append(tup)
 
@@ -27,10 +26,10 @@ def runVM():
     #num_str = str(bitstring.BitArray(float=1.2323, length=32))
     #float_back = struct.unpack('!f', bytes.fromhex(num_str[2:]))[0]
 
-    print("Values received from RTDS (or fake ones): ", ldata)
+    print("1... Values received from RTDS (or fake ones): ", ldata)
 
     if len(settings_fromRTDS) != NumData or len(settings_fromRTDS) != NumData:
-        print("RPI2: Setting does not compatible with incoming RTDS data! STOP writing to DB!")
+        print("VM: Setting does not compatible with incoming RTDS data! STOP!")
         sys.exit()
 
     ### makes HASH1 from DATA
@@ -76,8 +75,9 @@ def runVM():
         testdcs.publish("VM/VM/DCS/V1", "signV1 from DCS1")
         testdcs.publish("VM/VM/DCS/V2", "signV2 from DCS1")
 
-    time.sleep(3)  # max waiting time for DCS agent response
+    time.sleep(wait_dcs)  # max waiting time for DCS agent response
     vm.loop_stop()
+    print("2... VM: Communication with DCS done.")
 
     ### sends DATAs and SIGNs via LTE, MQTT to DSO (data + signature) + ts
     ts = time.time()
@@ -88,14 +88,12 @@ def runVM():
                    ("LTE/DSO/VM/V2/data", data1[1]),
                    ("LTE/DSO/VM/V2/sign", msgs_from_dcs[1][1]),
                    ("LTE/DSO/VM/V2/ts", ts)]
-
     print(msgs_to_dso)
 
     # HERE THE ATTACK, for example...
 
+    # change connection to DSO, instead of DCS
     vm.reinitialise()
     vm.connect(IP_broker[1])
     publish.multiple(msgs_to_dso, hostname=IP_broker[1])
-    print("published via LTE topic...")
-
-runVM()
+    print("3... Multiple message (above) published via LTE topic.")

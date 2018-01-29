@@ -14,7 +14,10 @@ IP_broker = ['localhost', # broker between VM and DCS1
              'localhost'] # between DSO and BRGW
 
 dcssim = True
+wait_dcs = 3
+
+
+wait_lte = 2
+
 
 DSO_control = True
-
-period = 15 # every period process starts from data download

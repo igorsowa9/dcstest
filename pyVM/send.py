@@ -20,6 +20,6 @@ def send(data, IP, Port):
 			a += struct.pack('>f', data[i])
 
 	sent = sock.sendto(a, server_address)
-	print("RPI2, send: data sent ot RTDS(",IP,Port,"): ", data)
+	print("--- Data sent to RTDS(",IP,Port,"): ", data, "---")
 	
 	return a, server_address
