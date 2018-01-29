@@ -126,7 +126,10 @@ def runDSO():
     # DSO sends the block traffic command if necessary - via on_message_countermeasure()
     if DSO_control==True:
 
-         # data received from measurements, also might be compromised
+        #data received from measurements, also might be compromised
+
+        print(data[0])
+        print(data[0][22:30])
 
         Pload10 = round(float(struct.unpack('!f', bytes.fromhex(data[0][2:10]))[0]),4)
         Qload10 = round(float(struct.unpack('!f', bytes.fromhex(data[0][12:20]))[0]),4)
