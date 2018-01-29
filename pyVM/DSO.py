@@ -68,6 +68,7 @@ def runDSO():
                    ("DSO/DCS/DSO/V2/hash", hash2[1]),
                    ("DSO/DCS/DSO/V2/sign", msgs_from_vm['LTE/DSO/VM/V2/sign'])]
     publish.multiple(msgs_to_dcs, hostname=IP_broker[2])
+    msgs_from_vm.clear()
 
     ### receives response from DCS2
     print("2... DSO: Check with DCS starts.")
