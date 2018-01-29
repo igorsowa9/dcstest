@@ -4,6 +4,7 @@ import hashlib
 import paho.mqtt.client as mqttcli
 import paho.mqtt.publish as publish
 import time
+import struct
 
 from receive import receive
 from settings import settings_fromRTDS, NumData, IP_send, IP_receive, Port_send, Port_receive, IP_broker, dcssim, DSO_control
@@ -17,8 +18,7 @@ msgs_from_vm = {}
 
 
 def on_message(client, userdata, message):
-    print("Following message received: ", str(message.payload.decode("utf-8")), ": full topic: ", message.topic)
-
+    #print("Following message received: ", str(message.payload.decode("utf-8")), ": full topic: ", message.topic)
     tup = {message.topic : str(message.payload.decode("utf-8"))}
     msgs_from_vm.update(tup)
 
@@ -34,6 +34,9 @@ def on_message_countermeasure(client, userdata, message):
 def runDSO():
 
     if False:
+
+        num_str = str(bitstring.BitArray(float=1.2323, length=32))
+        float_back = struct.unpack('!f', bytes.fromhex(num_str[2:]))[0]
 
         f1 = bitstring.BitArray(float=4.265, length=32)
         print(f1.hex)
@@ -91,9 +94,9 @@ def runDSO():
         sys.exit()
 
     ### hash the data
-    data = np.array([float(msgs_from_vm['LTE/DSO/VM/V1/data']), float(msgs_from_vm['LTE/DSO/VM/V2/data'])])
-    h1 = hashlib.sha256(data[0]).hexdigest()
-    h2 = hashlib.sha256(data[1]).hexdigest()
+    data = np.array([str(msgs_from_vm['LTE/DSO/VM/V1/data']), str(msgs_from_vm['LTE/DSO/VM/V2/data'])])
+    h1 = hashlib.sha256(data[0].encode('utf8')).hexdigest()
+    h2 = hashlib.sha256(data[1].encode('utf8')).hexdigest()
     hash2 = np.array([h1, h2])
 
     ### send the hashed data + signatures
@@ -123,18 +126,24 @@ def runDSO():
     # DSO sends the block traffic command if necessary - via on_message_countermeasure()
     if DSO_control==True:
 
-        Pload10 = data[0] # data received from measurements, also might be compromised
-        Qload10 = data[1]
-        print(Pload10, Qload10)
-        sys.exit()
-        V10pu = 0.8754
+         # data received from measurements, also might be compromised
+
+        Pload10 = round(float(struct.unpack('!f', bytes.fromhex(data[0][2:10]))[0]),4)
+        Qload10 = round(float(struct.unpack('!f', bytes.fromhex(data[0][12:20]))[0]),4)
+        V10pu = round(float(struct.unpack('!f', bytes.fromhex(data[0][22:30]))[0]),4)
+
+        Pload5 = round(float(struct.unpack('!f', bytes.fromhex(data[1][2:10]))[0]),4)
+        Qload5 = round(float(struct.unpack('!f', bytes.fromhex(data[1][12:20]))[0]),4)
+        V5pu = round(float(struct.unpack('!f', bytes.fromhex(data[1][22:30]))[0]),4)
 
         ppc = case33bw_dcs() # static data of topology and rest of the loads etc.
 
         ppc["bus"][9][2] = Pload10 # update of the ppc according to measurements
         ppc["bus"][9][3] = Qload10
+        ppc["bus"][4][2] = Pload5
+        ppc["bus"][4][3] = Qload5
 
-        r = runopf2(ppc) # opf according to new states
+        r = runopf2(ppc) # opf according to new states (i.e. measurements, possibly compromised)
 
         Pset5 = round(r["gen"][1, 1], 4)
         if Pset5 == 0: Pset5 = 0.0001
