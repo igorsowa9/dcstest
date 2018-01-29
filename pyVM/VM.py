@@ -8,7 +8,7 @@ import bitstring
 import struct
 
 from receive import receive
-from settings import settings_fromRTDS, NumData, IP_send, IP_receive, Port_send, Port_receive, IP_broker, dcssim, wait_dcs
+from settings import settings_fromRTDS, NumData, IP_send, IP_receive, Port_send, Port_receive, IP_broker, dcssim, wait_dcs, attack
 
 msgs_from_dcs = []
 
@@ -20,8 +20,8 @@ def on_message(client, userdata, message):
 
 def runVM():
 
-    #ldata = np.array([4.111, 2.111, 1.01, 0.661, 0.331, 1.02]) # offline TEST
-    ldata = receive(IP_receive, Port_receive, NumData)
+    ldata = np.array([4.111, 2.111, 1.01, 0.661, 0.331, 1.02]) # offline TEST
+    #ldata = receive(IP_receive, Port_receive, NumData)
 
     #num_str = str(bitstring.BitArray(float=1.2323, length=32))
     #float_back = struct.unpack('!f', bytes.fromhex(num_str[2:]))[0]
@@ -90,7 +90,12 @@ def runVM():
                    ("LTE/DSO/VM/V2/ts", ts)]
     print(msgs_to_dso)
 
-    # HERE THE ATTACK, for example...
+    if attack == True:
+        # HERE "THE ATTACK", for example... Qload10 0.001 injection instead of 2.111
+        inj_str = str(bitstring.BitArray(float=0.001, length=32))
+        mod = msgs_to_dso[0][1][0:10] + inj_str + msgs_to_dso[0][1][20:30]
+        msgs_to_dso[0] = ("LTE/DSO/VM/V1/data", mod)
+        print("\tAttack performed on Qload10, message modified: ", msgs_to_dso)
 
     # change connection to DSO, instead of DCS
     vm.reinitialise()

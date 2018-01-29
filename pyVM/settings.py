@@ -15,9 +15,7 @@ IP_broker = ['localhost', # broker between VM and DCS1
 
 dcssim = True
 wait_dcs = 3
-
-
 wait_lte = 2
 
-
+attack = True
 DSO_control = True
