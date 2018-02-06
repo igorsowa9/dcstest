@@ -7,7 +7,8 @@ import time
 import struct
 
 from receive import receive
-from settings import settings_fromRTDS, NumData, IP_send, IP_receive, Port_send, Port_receive, IP_broker, dcssim, DSO_control, wait_lte, wait_dcs
+from settings import settings_fromRTDS, NumData, IP_send, IP_receive, Port_send, Port_receive, IP_broker, \
+    dcssim, DSO_control, wait_lte, wait_dcs, results, attack
 from pypower.api import ppoption, runpf, printpf, runopf
 from runopf_no_printpf import runopf as runopf2
 from case33bw_dcs import case33bw_dcs
@@ -27,8 +28,11 @@ def on_message_countermeasure(client, userdata, message):
     print("\tCountermeasure message: ", str(message.payload.decode("utf-8")), " about: ", message.topic[-2:])
 
     if int(message.payload.decode("utf-8")) == 1:
-        publish.single("DSO/BRGW/COUNTERMEASURE/" + str(message.topic[-2:]), "1")
+        publish.single("DSO/BRGW/COUNTERMEASURE/" + str(message.topic[-2:]), "1 - block the traffic!")
         print("\t\tBlocking procedure of ", message.topic[-2:], ". Message published for BRGW")
+
+    if int(message.payload.decode("utf-8")) == 0:
+        publish.single("DSO/BRGW/COUNTERMEASURE/" + str(message.topic[-2:]), "0 - no action.")
 
 
 def runDSO():
@@ -79,8 +83,13 @@ def runDSO():
     if dcssim == True:  # test certificates from DCS agent
         testdcs = mqttcli.Client()
         testdcs.connect(IP_broker[2])  # connect to broker at DCS1 (self)
-        testdcs.publish("DSO/DSO/DCS/V1", "1")
-        testdcs.publish("DSO/DSO/DCS/V2", "0")
+        # here the DCS actions happen i.e. comparison with the original hash
+        if attack == True:
+            testdcs.publish("DSO/DSO/DCS/V1", "1")
+            testdcs.publish("DSO/DSO/DCS/V2", "0")
+        else:
+            testdcs.publish("DSO/DSO/DCS/V1", "0")
+            testdcs.publish("DSO/DSO/DCS/V2", "0")
 
     time.sleep(wait_dcs)  # max waiting time for DCS2 response
     dso.loop_stop()
@@ -107,6 +116,17 @@ def runDSO():
         print("\tUpdate of the data (loads) according to received measurements")
 
         r = runopf2(ppc) # opf according to new states (i.e. measurements, possibly compromised)
+
+        if results == True:
+            timestr = str(time.time())[:10]
+            with open('results/objf.txt', 'a') as file:
+                file.write(str(r["f"])+"\n")
+
+            with open('results/Pset5.txt', 'a') as file:
+                file.write(str(r["gen"][1, 1])+"\n")
+
+            with open('results/Qset5.txt', 'a') as file:
+                file.write(str(r["gen"][1, 2])+"\n")
 
         Pset5 = round(r["gen"][1, 1], 4)
         if Pset5 == 0: Pset5 = 0.0001

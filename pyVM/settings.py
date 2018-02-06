@@ -13,9 +13,13 @@ IP_broker = ['localhost', # broker between VM and DCS1
              'localhost', # between DSO and DCS2
              'localhost'] # between DSO and BRGW
 
+# server at VM, but it does not matter
+
 dcssim = True
 wait_dcs = 3
 wait_lte = 2
 
-attack = True
+attack = False
 DSO_control = True
+
+results = True

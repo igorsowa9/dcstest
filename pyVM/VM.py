@@ -8,7 +8,7 @@ import bitstring
 import struct
 
 from receive import receive
-from settings import settings_fromRTDS, NumData, IP_send, IP_receive, Port_send, Port_receive, IP_broker, dcssim, wait_dcs, attack
+from settings import settings_fromRTDS, NumData, IP_send, IP_receive, Port_send, Port_receive, IP_broker, dcssim, wait_dcs, attack, results
 
 msgs_from_dcs = []
 
@@ -84,7 +84,7 @@ def runVM():
     # list of ['V?', value],'signV?', ts]x2
     msgs_to_dso = [("LTE/DSO/VM/V1/data", data1[0]),            # data value
                    ("LTE/DSO/VM/V1/sign", msgs_from_dcs[0][1]), # signature
-                   ("LTE/DSO/VM/V1/ts", ts),                    # timestanp
+                   ("LTE/DSO/VM/V1/ts", ts),                    # timestamp
                    ("LTE/DSO/VM/V2/data", data1[1]),
                    ("LTE/DSO/VM/V2/sign", msgs_from_dcs[1][1]),
                    ("LTE/DSO/VM/V2/ts", ts)]
@@ -95,7 +95,7 @@ def runVM():
         inj_str = str(bitstring.BitArray(float=0.001, length=32))
         mod = msgs_to_dso[0][1][0:10] + inj_str + msgs_to_dso[0][1][20:30]
         msgs_to_dso[0] = ("LTE/DSO/VM/V1/data", mod)
-        print("\tAttack performed on Qload10, message modified: ", msgs_to_dso)
+        print("\tATTACK performed on Qload10, message modified: ", msgs_to_dso)
 
     # change connection to DSO, instead of DCS
     vm.reinitialise()
