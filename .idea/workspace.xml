@@ -2,16 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7f7677d2-c734-47cc-98cc-9c62d12f539b" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/matVM/octpy_test.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/matVM/octpy.py" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/matVM/case33bw_dcs2.m" afterPath="$PROJECT_DIR$/matVM/case33bw_dcs2.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/matVM/test.m" afterPath="$PROJECT_DIR$/matVM/test.m" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyVM/DSO.py" afterPath="$PROJECT_DIR$/pyVM/DSO.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyVM/results/Pset5.txt" afterPath="$PROJECT_DIR$/pyVM/results/Pset5.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyVM/results/Qset5.txt" afterPath="$PROJECT_DIR$/pyVM/results/Qset5.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyVM/results/objf.txt" afterPath="$PROJECT_DIR$/pyVM/results/objf.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyVM/settings.py" afterPath="$PROJECT_DIR$/pyVM/settings.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -26,11 +17,21 @@
       <file leaf-file-name="DSO.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pyVM/DSO.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="184">
-              <caret line="134" column="44" lean-forward="false" selection-start-line="134" selection-start-column="44" selection-end-line="134" selection-end-column="44" />
+            <state relative-caret-position="274">
+              <caret line="135" column="41" lean-forward="true" selection-start-line="135" selection-start-column="41" selection-end-line="135" selection-end-column="41" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="case33bw_dcs2.m" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/matVM/case33bw_dcs2.m">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="413">
+              <caret line="91" column="22" lean-forward="false" selection-start-line="91" selection-start-column="22" selection-end-line="91" selection-end-column="22" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -65,7 +66,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="VM.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="VM.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pyVM/VM.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="216">
@@ -138,6 +139,7 @@
         <option value="$PROJECT_DIR$/pyVM/settings.py" />
         <option value="$PROJECT_DIR$/pyVM/DSO.py" />
         <option value="$PROJECT_DIR$/pyVM/VM.py" />
+        <option value="$PROJECT_DIR$/matVM/case33bw_dcs2.m" />
       </list>
     </option>
   </component>
@@ -680,13 +682,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pyVM/case33bw_dcs2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="355">
-          <caret line="49" column="40" lean-forward="false" selection-start-line="49" selection-start-column="40" selection-end-line="49" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/local/lib/python3.6/dist-packages/numpy/core/numeric.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="190">
@@ -741,14 +736,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/matVM/case33bw_dcs2.m">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-450">
-          <caret line="8" column="29" lean-forward="true" selection-start-line="8" selection-start-column="29" selection-end-line="8" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pyVM/settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="468">
@@ -757,20 +744,36 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/pyVM/VM.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="22" column="5" lean-forward="false" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyVM/case33bw_dcs2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="355">
+          <caret line="49" column="40" lean-forward="false" selection-start-line="49" selection-start-column="40" selection-end-line="49" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/pyVM/DSO.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="134" column="44" lean-forward="false" selection-start-line="134" selection-start-column="44" selection-end-line="134" selection-end-column="44" />
+        <state relative-caret-position="274">
+          <caret line="135" column="41" lean-forward="true" selection-start-line="135" selection-start-column="41" selection-end-line="135" selection-end-column="41" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pyVM/VM.py">
+    <entry file="file://$PROJECT_DIR$/matVM/case33bw_dcs2.m">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="22" column="5" lean-forward="false" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
+        <state relative-caret-position="413">
+          <caret line="91" column="22" lean-forward="false" selection-start-line="91" selection-start-column="22" selection-end-line="91" selection-end-column="22" />
           <folding />
         </state>
       </provider>
