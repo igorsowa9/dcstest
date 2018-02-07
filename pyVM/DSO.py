@@ -8,12 +8,25 @@ import struct
 
 from receive import receive
 from settings import settings_fromRTDS, NumData, IP_send, IP_receive, Port_send, Port_receive, IP_broker, \
-    dcssim, DSO_control, wait_lte, wait_dcs, results, attack
+    dcssim, DSO_control, wait_lte, wait_dcs, results, attack, matpower_octave
 from pypower.api import ppoption, runpf, printpf, runopf
 from runopf_no_printpf import runopf as runopf2
 from case33bw_dcs import case33bw_dcs
 from send import send
 import bitstring
+
+from oct2py import octave
+import platform
+
+if str(platform.release()) == "4.13.0-32-generic":
+    octave.addpath('/home/iso/PycharmProjects/git_dcstest/matVM')
+    octave.addpath('/home/iso/PycharmProjects/git_dcstest/matVM/matpower6.0')
+    octave.addpath('/home/iso/PycharmProjects/git_dcstest/matVM/matpower6.0/t')
+else:
+    octave.addpath('/home/iso/dcstest/matVM')
+    octave.addpath('/home/iso/dcstest/matVM/matpower6.0')
+    octave.addpath('/home/iso/dcstest/matVM/matpower6.0/t')
+
 
 msgs_from_vm = {}
 
@@ -107,7 +120,10 @@ def runDSO():
         Qload5 = round(float(struct.unpack('!f', bytes.fromhex(data[1][12:20]))[0]),4)
         V5pu = round(float(struct.unpack('!f', bytes.fromhex(data[1][22:30]))[0]),4)
 
-        ppc = case33bw_dcs() # static data of topology and rest of the loads etc.
+        if matpower_octave == True:
+            ppc = octave.case33bw_dcs2()
+        else:
+            ppc = case33bw_dcs()  # static data of topology and rest of the loads etc.
 
         ppc["bus"][9][2] = Pload10 # update of the ppc according to measurements
         ppc["bus"][9][3] = Qload10
@@ -115,7 +131,11 @@ def runDSO():
         ppc["bus"][4][3] = Qload5
         print("\tUpdate of the data (loads) according to received measurements")
 
-        r = runopf2(ppc) # opf according to new states (i.e. measurements, possibly compromised)
+        if matpower_octave == True:
+            mpopt = octave.mpoption('out.all',0)
+            r = octave.runopf(ppc, mpopt)
+        else:
+            r = runopf2(ppc)  # opf according to new states (i.e. measurements, possibly compromised
 
         if results == True:
             timestr = str(time.time())[:10]
