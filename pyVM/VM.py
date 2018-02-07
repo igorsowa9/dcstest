@@ -20,8 +20,8 @@ def on_message(client, userdata, message):
 
 def runVM():
 
-    ldata = np.array([4.111, 2.111, 1.01, 0.661, 0.331, 1.02]) # offline TEST
-    #ldata = receive(IP_receive, Port_receive, NumData)
+    #ldata = np.array([4.111, 2.111, 1.01, 0.661, 0.331, 1.02]) # offline TEST
+    ldata = receive(IP_receive, Port_receive, NumData)
 
     #num_str = str(bitstring.BitArray(float=1.2323, length=32))
     #float_back = struct.unpack('!f', bytes.fromhex(num_str[2:]))[0]
